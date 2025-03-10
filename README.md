@@ -1,2 +1,2 @@
-# VR_Project1
-Graded mini-project for the AIM825 Visual Recognition Course
+https://github.com/chandrikadeb7/Face-Mask-Detection/tree/master/dataset
+https://github.com/sadjadrz/MFSD
