@@ -24,8 +24,7 @@
 ## Methodology
 
  #### Part A
-**Dataset**: 
-   - Two classes - `with_mask`, `without_mask`.  
+ The following is done:
 **Preprocessing**:  
    - Convert images to **grayscale**.  
    - Resize to **64×64** pixels.  
@@ -36,6 +35,19 @@
    - **Neural Network (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs)**  
 
 #### Part B
+The following is done:
+**Preprocessing**:  
+   - Rescaled images (`1/255`) for normalization.  
+   - 80-20 split for training & validation.  
+**CNN Architecture**:  
+   - **Conv2D** layers with **Tanh activation**.  
+   - **Pooling & Dropout for regularization**.  
+   - **Fully connected layers & Sigmoid activation** for classification.  
+**Hyperparameters**:  
+   - Batch Size: **16**  
+   - Optimizer: **Adam**  
+   - Activation: **Tanh**  
+   - Learning Rate: **0.001**
 
 #### Part C
 Here we tried the following methods:
@@ -65,6 +77,8 @@ All outputs can be visualized using the code by setting the paramater show to be
 - **MLP**: One hidden layer (**100 neurons, ReLU, Adam, 500 epochs**).  
 
 #### Part B
+- Trained the CNN model using different optimizers, batch sizes, and activation functions.
+- Evaluated the accuracy for 5 epochs on the validation set.
 
 #### Part C
 - kmeans, gmm and otsu thresholding were straight forward to code and required no specific experiments.
@@ -89,6 +103,10 @@ All outputs can be visualized using the code by setting the paramater show to be
 - **Neural Network** achieved an accuracy of **91.0%**
 
 #### Part B
+- The CNN model gave the highest accuracy of 97% compared to the models present in the part A.
+- SVM and MLP may work well with smaller datasets. They donot capture the spatial feaures as CNN does which helps learning edge, texture, and
+  shaper hierarchies through the convolution layers.
+- SVM and MLP require manual feature extraction which may not capture complex features efficiently.
 
 #### Part C
 All the methods mentioned are subject to error. This is due to the images having different lighting conditions, contrasts,
@@ -103,6 +121,7 @@ The highest IOU score achieved was around 0.86 by gmm. IOU scores as low as 0.2 
 ---
 
 ## Observations and Challenges
+CNN model shows to outperform the other models such as the SVM or MLP due to its ability to capture the spatial features and well generalization.
 Supervised machine learning methods perform much better than traditional methods in the segmentation task.
 
 ---
