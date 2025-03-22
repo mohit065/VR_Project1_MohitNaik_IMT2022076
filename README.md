@@ -26,14 +26,16 @@
  #### Part A
  The following is done:
  
-**Preprocessing**:  
-   - Convert images to grayscale.  
-   - Resize to 64×64 pixels.  
-**Feature Extraction**:  
-   - Apply Histogram of Oriented Gradients (HOG).  
-**Models Used**:  
-   - SVM (RBF Kernel, C=1.0)  
-   - Neural Network (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs) 
+### **Preprocessing**  
+- Convert images to grayscale.  
+- Resize to 64×64 pixels.  
+
+### **Feature Extraction**  
+- Apply Histogram of Oriented Gradients (HOG).  
+
+### **Models Used**  
+- **SVM** (RBF Kernel, C=1.0)  
+- **Neural Network** (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs)  
 
 #### Part B
 The following is done:
