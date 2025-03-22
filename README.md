@@ -37,10 +37,10 @@
 ## Experiments
 
 ### Part A
-**Train-Test Split**: 80% train, 20% test (stratified).  
-**Hyperparameter-tuning** : Hyperparameter tuning was done using grid-search cv for both the models.
-**SVM**: Trained with **RBF kernel** for non-linear separability.  
-**MLP**: One hidden layer (**100 neurons, ReLU, Adam, 500 epochs**).  
+- **Train-Test Split**: 80% train, 20% test (stratified).  
+- **Hyperparameter-tuning** : Hyperparameter tuning was done using grid-search cv for both the models.
+- **SVM**: Trained with **RBF kernel** for non-linear separability.  
+- **MLP**: One hidden layer (**100 neurons, ReLU, Adam, 500 epochs**).  
 
 ### Part B
 
@@ -51,8 +51,8 @@
 ## Results
 
 ### Part A
-**SVM** achieved an accuracy of **94.0%**.
-**Neural Network** achieved an accuracy of **91.0%**
+- **SVM** achieved an accuracy of **94.0%**.
+- **Neural Network** achieved an accuracy of **91.0%**
 
 ### Part B
 
