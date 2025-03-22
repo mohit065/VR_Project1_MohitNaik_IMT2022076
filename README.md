@@ -9,14 +9,21 @@
 - [Results](#results)
 - [Observations and Challenges](#observations-and-challenges)
 - [Steps to Run](#steps-to-run)
+- [Contributions](#contributions)
+
+---
 
 ## Introduction
 
+---
+
 ## Dataset
+
+---
 
 ## Methodology
 
-### Part A
+ #### Part A
 **Dataset**: 
    - Two classes - `with_mask`, `without_mask`.  
 **Preprocessing**:  
@@ -28,9 +35,9 @@
    - **SVM (RBF Kernel, C=1.0)**  
    - **Neural Network (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs)**  
 
-### Part B
+#### Part B
 
-### Part C
+#### Part C
 Here we tried the following methods:
 - **kmeans**: Run a simple kmeans clustering based on each pixel's rgb values with k=2
 - **gmm**: Again a simple clustering algorithm that is run with n_components = 2
@@ -45,20 +52,21 @@ If edges are prominent in other parts of the image such other than at the mask f
 
 All outputs can be visualized using the code by setting the paramater show to be equal to True in the segmentation function.
 
+#### Part D
 
-### Part D
+---
 
 ## Experiments
 
-### Part A
+#### Part A
 - **Train-Test Split**: 80% train, 20% test (stratified).  
 - **Hyperparameter-tuning** : Hyperparameter tuning was done using grid-search cv for both the models.
 - **SVM**: Trained with **RBF kernel** for non-linear separability.  
 - **MLP**: One hidden layer (**100 neurons, ReLU, Adam, 500 epochs**).  
 
-### Part B
+#### Part B
 
-### Part C
+#### Part C
 - kmeans, gmm and otsu thresholding were straight forward to code and required no specific experiments.
 - Using the watershed algorithm involved tweaking the morphological operation (CLOSE OR OPEN), the threshold limits 
    and the size of the blurring kernel. However no significant improvement was observed. 
@@ -70,17 +78,19 @@ All outputs can be visualized using the code by setting the paramater show to be
    they perform at a level comparable to the other methods.
 
 
-### Part D
+#### Part D
+
+---
 
 ## Results
 
-### Part A
+#### Part A
 - **SVM** achieved an accuracy of **94.0%**.
 - **Neural Network** achieved an accuracy of **91.0%**
 
-### Part B
+#### Part B
 
-### Part C
+#### Part C
 All the methods mentioned are subject to error. This is due to the images having different lighting conditions, contrasts,
 colors, gradients, designs on masks etc. Thresholding inevitably fails for images taken in different conditions.
 Sometimes the surrouding image has a similar color to that of the mask. This makes kmeans and gmm produce severely inaccurate results.
@@ -88,10 +98,14 @@ The method used to segment using canny edges is purely a heuristic and has poor 
 The scores are printed when the code is run. IOU is used the metric. Alternatively, dice scores could also be used.
 The highest IOU score achieved was around 0.86 by gmm. IOU scores as low as 0.2 were encountered on blurred images.
 
-### Part D
+#### Part D
+
+---
 
 ## Observations and Challenges
 Supervised machine learning methods perform much better than traditional methods in the segmentation task.
+
+---
 
 ## Steps to Run
 
@@ -120,13 +134,21 @@ Ensure you have `python 3.10`. To install required libraries, run
 pip install requirements.txt
 ```
 
-### Part A
+#### Part A
 - Assign the dataset path to the dataset_path variable and make sure that the subfolders present follow the naming shown above.
 
-### Part B
+#### Part B
 
-### Part C
+#### Part C
 - Change the path_to_data and path_to_segmented_op variables to represent the directories in which the input images and segmentation ground truth masks are present.
 - The values are already filled correctly if the directory structure mentioned above is followed.
 
-### Part D
+#### Part D
+
+---
+
+## Contributions
+
+---
+
+Github Link : 
