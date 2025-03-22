@@ -39,14 +39,14 @@
 
 #### Part B
 The following is done:
-**Preprocessing**:  
+### **Preprocessing**:  
    - Rescaled images (`1/255`) for normalization.  
    - 80-20 split for training & validation.  
-**CNN Architecture**:  
+### **CNN Architecture**:  
    - Conv2D layers with Tanh activation.  
    - Pooling & Dropout for regularization.  
    - Fully connected layers & Sigmoid activation for classification.  
-**Hyperparameters**:  
+### **Hyperparameters**:  
    - Batch Size: 16
    - Optimizer: Adam
    - Activation: Tanh 
