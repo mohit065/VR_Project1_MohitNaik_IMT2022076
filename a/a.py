@@ -2,74 +2,65 @@ import os
 import cv2
 import numpy as np
 from skimage.feature import hog
+from concurrent.futures import ThreadPoolExecutor
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
-from tqdm import tqdm
 
-# This function extracts the HOG features from the input image
+# Function to extract HOG features
 def extract_hog_features(image):
-    # Preprocessing of the image
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) # Converting the image to grayscale
-    image = cv2.resize(image, (64, 64))  # Resize for uniformity
-    features, _ = hog(image, pixels_per_cell=(8, 8), cells_per_block=(2, 2), 
-                      orientations=9, block_norm='L2-Hys', visualize=True)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
+    image = cv2.resize(image, (64, 64))  # Resize for consistency
+    features = hog(image, pixels_per_cell=(8, 8), cells_per_block=(2, 2), 
+                    orientations=9, block_norm='L2-Hys', visualize=False)
     return features
 
-# This function loads the dataset as per the format given in the readme
+# Function to load dataset in parallel
+def process_image(file_path, label):
+    image = cv2.imread(file_path)
+    if image is None:
+        return None, None
+    features = extract_hog_features(image)
+    return features, label if features is not None else (None, None)
+
 def load_dataset(dataset_path):
     X, y = [], []
     categories = ['with_mask', 'without_mask']
-    
+    all_files = []
     for label, category in enumerate(categories):
         folder_path = os.path.join(dataset_path, category)
-        for file in tqdm(os.listdir(folder_path), desc=f"Processing {category}"):
-            img_path = os.path.join(folder_path, file)
-            image = cv2.imread(img_path)
-            if image is not None:
-                features = extract_hog_features(image)
-                X.append(features)
-                y.append(label)
-    
+        if not os.path.exists(folder_path):
+            continue
+        for file in os.listdir(folder_path):
+            all_files.append((os.path.join(folder_path, file), label))
+
+    with ThreadPoolExecutor() as executor:
+        results = list(executor.map(lambda p: process_image(*p), all_files))
+
+    X, y = zip(*[(f, l) for f, l in results if f is not None])
     return np.array(X), np.array(y)
 
-# Load dataset path 
-dataset_path = "dataset"
-X, y = load_dataset(dataset_path)
+# Main execution
+if __name__ == "__main__":
+    dataset_path = os.path.abspath("../datasets/dataset1")  # Ensure absolute path
+    X, y = load_dataset(dataset_path)
 
-# Split the dataset for training and testing
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+    # Split dataset into training and testing
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-# Hyperparameters used for tuning the model
-# param_grid = {
-#     'C': [0.1, 1, 10, 100],  # Regularization strength
-#     'kernel': ['linear', 'rbf', 'poly'],
-#     'gamma': ['scale', 'auto']
-# }
+    # Optimized SVM model (increased cache size, better gamma)
+    svm_model = SVC(kernel='rbf', C=1.0, gamma='scale', cache_size=700)
+    svm_model.fit(X_train, y_train)
+    y_pred_svm = svm_model.predict(X_test)
+    svm_accuracy = accuracy_score(y_test, y_pred_svm)
 
-# Train and evaluate the SVM model
-svm_model = SVC(kernel='rbf', C=1.0)
-svm_model.fit(X_train, y_train)
-y_pred_svm = svm_model.predict(X_test)
-svm_accuracy = accuracy_score(y_test, y_pred_svm)
+    # Optimized Neural Network model (faster solver, increased max_iter)
+    nn_model = MLPClassifier(hidden_layer_sizes=(100,), activation='relu', solver='adam', max_iter=300)
+    nn_model.fit(X_train, y_train)
+    y_pred_nn = nn_model.predict(X_test)
+    nn_accuracy = accuracy_score(y_test, y_pred_nn)
 
-# Hyperparameters used for tuning the model
-# param_grid = {
-#     'hidden_layer_sizes': [(50,), (100,), (100, 50), (200, 100)],  # Different layer configurations
-#     'activation': ['relu', 'tanh', 'logistic'],  # Different activation functions
-#     'solver': ['adam', 'sgd', 'lbfgs'],  # Different solvers
-#     'alpha': [0.0001, 0.001, 0.01],  # L2 Regularization
-#     'learning_rate': ['constant', 'adaptive'],  # Learning rate strategy
-#     'max_iter': [500, 1000]  # Iteration limits
-# }
-
-# Train and evaluate the Neural Network model
-nn_model = MLPClassifier(hidden_layer_sizes=(100,), activation='relu', solver='adam', max_iter=500)
-nn_model.fit(X_train, y_train)
-y_pred_nn = nn_model.predict(X_test)
-nn_accuracy = accuracy_score(y_test, y_pred_nn)
-
-# Pint the accuracy of both the models
-print(f"SVM Accuracy: {svm_accuracy:.2f}")
-print(f"Neural Network Accuracy: {nn_accuracy:.2f}")
+    # Print the accuracies
+    print(f"SVM Accuracy: {svm_accuracy:.2f}")
+    print(f"Neural Network Accuracy: {nn_accuracy:.2f}")
