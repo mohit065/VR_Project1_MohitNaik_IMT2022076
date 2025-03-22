@@ -26,13 +26,13 @@
  #### Part A
  The following is done:
 **Preprocessing**:  
-   - Convert images to **grayscale**.  
-   - Resize to **64×64** pixels.  
+   - Convert images to grayscale.  
+   - Resize to 64×64 pixels.  
 **Feature Extraction**:  
-   - Apply **Histogram of Oriented Gradients (HOG)**.  
+   - Apply istogram of Oriented Gradients (HOG).  
 **Models Used**:  
-   - **SVM (RBF Kernel, C=1.0)**  
-   - **Neural Network (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs)**  
+   - SVM (RBF Kernel, C=1.0)  
+   - Neural Network (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs) 
 
 #### Part B
 The following is done:
@@ -40,14 +40,14 @@ The following is done:
    - Rescaled images (`1/255`) for normalization.  
    - 80-20 split for training & validation.  
 **CNN Architecture**:  
-   - **Conv2D** layers with **Tanh activation**.  
-   - **Pooling & Dropout for regularization**.  
-   - **Fully connected layers & Sigmoid activation** for classification.  
+   - Conv2D layers with Tanh activation.  
+   - Pooling & Dropout for regularization.  
+   - Fully connected layers & Sigmoid activation for classification.  
 **Hyperparameters**:  
-   - Batch Size: **16**  
-   - Optimizer: **Adam**  
-   - Activation: **Tanh**  
-   - Learning Rate: **0.001**
+   - Batch Size: 16
+   - Optimizer: Adam
+   - Activation: Tanh 
+   - Learning Rate: 0.001
 
 #### Part C
 Here we tried the following methods:
@@ -73,8 +73,8 @@ All outputs can be visualized using the code by setting the paramater show to be
 #### Part A
 - **Train-Test Split**: 80% train, 20% test (stratified).  
 - **Hyperparameter-tuning** : Hyperparameter tuning was done using grid-search cv for both the models.
-- **SVM**: Trained with **RBF kernel** for non-linear separability.  
-- **MLP**: One hidden layer (**100 neurons, ReLU, Adam, 500 epochs**).  
+- **SVM**: Trained with RBF kernel for non-linear separability.  
+- **MLP**: One hidden layer (100 neurons, ReLU, Adam, 500 epochs).  
 
 #### Part B
 - Trained the CNN model using different optimizers, batch sizes, and activation functions.
@@ -99,8 +99,8 @@ All outputs can be visualized using the code by setting the paramater show to be
 ## Results
 
 #### Part A
-- **SVM** achieved an accuracy of **94.0%**.
-- **Neural Network** achieved an accuracy of **91.0%**
+- SVM achieved an accuracy of 94.0%.
+- Neural Network achieved an accuracy of 91.0%
 
 #### Part B
 - The CNN model gave the highest accuracy of 97% compared to the models present in the part A.
