@@ -17,6 +17,16 @@
 ## Methodology
 
 ### Part A
+**Dataset**: 
+   - Two classes - `with_mask`, `without_mask`.  
+**Preprocessing**:  
+   - Convert images to **grayscale**.  
+   - Resize to **64×64** pixels.  
+**Feature Extraction**:  
+   - Apply **Histogram of Oriented Gradients (HOG)**.  
+**Models Used**:  
+   - **SVM (RBF Kernel, C=1.0)**  
+   - **Neural Network (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs)**  
 
 ### Part B
 
@@ -27,6 +37,10 @@
 ## Experiments
 
 ### Part A
+**Train-Test Split**: 80% train, 20% test (stratified).  
+**Hyperparameter-tuning** : Hyperparameter tuning was done using grid-search cv for both the models.
+**SVM**: Trained with **RBF kernel** for non-linear separability.  
+**MLP**: One hidden layer (**100 neurons, ReLU, Adam, 500 epochs**).  
 
 ### Part B
 
@@ -37,6 +51,8 @@
 ## Results
 
 ### Part A
+**SVM** achieved an accuracy of **94.0%**.
+**Neural Network** achieved an accuracy of **91.0%**
 
 ### Part B
 
