@@ -1,77 +1,97 @@
 import os
-import numpy as np
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from sklearn.model_selection import train_test_split
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torchvision.transforms as transforms
+import torchvision.datasets as datasets
+from torch.utils.data import DataLoader
 
-dataset_path = "dataset"
-image_size = (64, 64)
+# Hyperparameters
+IMAGE_SIZE = (64, 64)
+BATCH_SIZE = 16
+EPOCHS = 5
 
-# Hyperparameter options
-batch_sizes = [16]
-optimizers = ['adam']
-activation_functions = ['tanh']
-learning_rates = [0.001]
+# Define transforms for the dataset
+data_transforms = transforms.Compose([
+    transforms.Resize(IMAGE_SIZE),
+    transforms.ToTensor(),
+    transforms.Normalize([0.5], [0.5])
+])
 
-# Data Preprocessing
-datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
+# Load dataset
+dataset_path = "../datasets/dataset1"
+train_dataset = datasets.ImageFolder(root=os.path.join(dataset_path), transform=data_transforms)
+train_size = int(0.8 * len(train_dataset))
+val_size = len(train_dataset) - train_size
+train_dataset, val_dataset = torch.utils.data.random_split(train_dataset, [train_size, val_size])
 
-for batch_size in batch_sizes:
-    for optimizer in optimizers:
-        for activation in activation_functions:
-            for lr in learning_rates:
-                print(f"\nTraining with Batch Size: {batch_size}, Optimizer: {optimizer}, Activation: {activation}, Learning Rate: {lr}")
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
-                train_generator = datagen.flow_from_directory(
-                    dataset_path,
-                    target_size=image_size,
-                    batch_size=batch_size,
-                    class_mode='binary',
-                    subset='training'
-                )
+# Define CNN model
+class MaskCNN(nn.Module):
+    def __init__(self):
+        super(MaskCNN, self).__init__()
+        activation = nn.Tanh()  # Activation function
+        self.conv_layers = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
+            activation,
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            activation,
+            nn.MaxPool2d(kernel_size=2, stride=2)
+        )
+        self.fc_layers = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(64 * 16 * 16, 128),
+            activation,
+            nn.Dropout(0.5),
+            nn.Linear(128, 1),
+            nn.Sigmoid()
+        )
+    
+    def forward(self, x):
+        x = self.conv_layers(x)
+        x = self.fc_layers(x)
+        return x
 
-                validation_generator = datagen.flow_from_directory(
-                    dataset_path,
-                    target_size=image_size,
-                    batch_size=batch_size,
-                    class_mode='binary',
-                    subset='validation'
-                )
+# Initialize model
+model = MaskCNN()
 
-                # CNN Model
-                cnn_model = Sequential([
-                    Conv2D(32, (3, 3), activation=activation, input_shape=(64, 64, 3)),
-                    MaxPooling2D(2, 2),
-                    Conv2D(64, (3, 3), activation=activation),
-                    MaxPooling2D(2, 2),
-                    Flatten(),
-                    Dense(128, activation=activation),
-                    Dropout(0.5),
-                    Dense(1, activation='sigmoid')
-                ])
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
 
-                # Compile Model with custom learning rate
-                opt = keras.optimizers.Adam(learning_rate=lr) if optimizer == 'adam' else \
-                      keras.optimizers.SGD(learning_rate=lr) if optimizer == 'sgd' else \
-                      keras.optimizers.RMSprop(learning_rate=lr)
+# Define loss function and optimizer
+criterion = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)  # Optimizer with learning rate
 
-                cnn_model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
+# Training loop
+for epoch in range(EPOCHS):
+    model.train()
+    train_loss, train_correct = 0, 0
+    for images, labels in train_loader:
+        images, labels = images.to(device), labels.float().to(device)
+        labels = labels.view(-1, 1)  # Reshape labels
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+        train_correct += ((outputs > 0.5).float() == labels).sum().item()
+    
+    train_acc = train_correct / train_size
+    print(f"Epoch {epoch+1}/{EPOCHS}, Train Loss: {train_loss/len(train_loader):.4f}, Train Accuracy: {train_acc:.4f}")
 
-                # Train Model
-                cnn_history = cnn_model.fit(
-                    train_generator,
-                    validation_data=validation_generator,
-                    epochs=5,  # Use fewer epochs for quick testing
-                    batch_size=batch_size,
-                    verbose=1
-                )
+# Validation
+model.eval()
+val_correct = 0
+with torch.no_grad():
+    for images, labels in val_loader:
+        images, labels = images.to(device), labels.float().to(device)
+        labels = labels.view(-1, 1)
+        outputs = model(images)
+        val_correct += ((outputs > 0.5).float() == labels).sum().item()
 
-                # Evaluate Model
-                loss, accuracy = cnn_model.evaluate(validation_generator)
-                print(f"Batch: {batch_size}, Optimizer: {optimizer}, Activation: {activation}, Learning Rate: {lr} -> Accuracy: {accuracy:.2f}")
-
-# Batch: 32, Optimizer: rmsprop, Activation: tanh, Learning Rate: 0.001 -> Accuracy: 0.97
-# Batch: 16, Optimizer: adam, Activation: tanh, Learning Rate: 0.001 -> Accuracy: 0.97
+val_acc = val_correct / val_size
+print(f"Final Validation Accuracy: {val_acc:.4f}")
