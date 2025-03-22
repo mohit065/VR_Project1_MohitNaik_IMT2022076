@@ -90,6 +90,7 @@ pip install requirements.txt
 ```
 
 ### Part A
+- Assign the dataset path to the dataset_path variable and make sure that the subfolders present follow the naming shown above.
 
 ### Part B
 
