@@ -23,30 +23,29 @@
 
 ## Methodology
 
- #### Part A
- The following is done:
- 
-### **Preprocessing**  
+#### Part A
+The following is done: 
+### Preprocessing:  
 - Convert images to grayscale.  
 - Resize to 64×64 pixels.  
 
-### **Feature Extraction**  
+### Feature Extraction:
 - Apply Histogram of Oriented Gradients (HOG).  
 
-### **Models Used**  
+### Models Used:
 - **SVM** (RBF Kernel, C=1.0)  
 - **Neural Network** (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs)  
 
 #### Part B
 The following is done:
-### **Preprocessing**:  
+### Preprocessing:  
    - Rescaled images (`1/255`) for normalization.  
    - 80-20 split for training & validation.  
-### **CNN Architecture**:  
+### CNN Architecture:  
    - Conv2D layers with Tanh activation.  
    - Pooling & Dropout for regularization.  
    - Fully connected layers & Sigmoid activation for classification.  
-### **Hyperparameters**:  
+### Hyperparameters:  
    - Batch Size: 16
    - Optimizer: Adam
    - Activation: Tanh 
