@@ -68,8 +68,6 @@ We tried the following traditional methods:
 
 All outputs can be visualized using the code by setting the paramater show to be equal to True in the segmentation function.
 
-#### Part D
-
 ---
 
 ## Experiments
@@ -151,4 +149,4 @@ pip install requirements.txt
 
 ---
 
-Github Link :
+Github Link : https://github.com/mohit084/VR_Project1
