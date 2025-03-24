@@ -142,9 +142,15 @@ Ensure you have `python 3.10`. To install required libraries, run
 pip install -r requirements.txt
 ```
 
+after which you can run the notebooks.
+
 ---
 
 ## Contributions
+
+- IMT2022017 Prateek Rath : Wrote the code for Part C (Segmentation using traditional methods)
+- IMT2022076 Mohit Naik : Wrote the code for Part D (Segmentation using U-Net)
+- IMT2022519 Vedant Mangrulkar : Wrote the code for Parts A and B (Classification Tasks)
 
 ---
 
