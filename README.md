@@ -67,6 +67,7 @@ We tried the following traditional methods:
 - **canny**: Use the canny edge detector to detect edges. Post this we consider two methods. The first one involves detecting horizontal and vertical coordinates where edges are prominent. The regions between the prominent edges is then filled to obtain the segmented output. The next one involves running a bfs and considering large edges only. Then using these edges, the minimum and maximum x and y coordinates are chosen to approximate the location of the mask. If edges are prominent in other parts of the image such other than at the mask face boundary of within the mask, we may go wrong.
 
 All outputs can be visualized using the code by setting the paramater show to be equal to True in the segmentation function.
+There is a count variable in each code that can be updated to look through more elements of the dataset and see scores.
 
 ---
 
