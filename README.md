@@ -53,7 +53,7 @@ For the CNN, we did the following:
 
 - Batch Size: 16
 - Optimizer: Adam
-- Activation: Tanh
+- Activation: Tanh (for convolution layers)
 - Learning Rate: 0.001
 
 ### Segmentation
@@ -102,6 +102,7 @@ All outputs can be visualized using the code by setting the paramater show to be
 - SVM and MLP require manual feature extraction which may not capture complex features efficiently.
 
 ### Segmentation
+
 All the methods mentioned are subject to error. This is due to the images having different lighting conditions, contrasts,
 colors, gradients, designs on masks etc. Thresholding inevitably fails for images taken in different conditions.
 Sometimes the surrouding image has a similar color to that of the mask. This makes kmeans and gmm produce severely inaccurate results.
@@ -129,18 +130,15 @@ Add the datasets so that the directory structure looks as follows:
  ┣ 📂dataset1
  ┃ ┣ 📂without_mask
  ┃ ┗ 📂with_mask
- ┗ 📂dataset2
- ┃ ┣ 📂1
- ┃ ┃ ┣ 📂face_crop
- ┃ ┃ ┣ 📂face_crop_segmentation
- ┃ ┣ 📂2
- ┃ ┃ ┣ 📂img
+ ┣ 📂dataset2
+ ┃ ┣ 📂face_crop
+ ┗ ┗ 📂face_crop_segmentation
 ```
 
 Ensure you have `python 3.10`. To install required libraries, run
 
 ```none
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 ---
