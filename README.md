@@ -15,46 +15,46 @@
 
 ## Introduction
 
+The aim of this project was to perform facemask detection, classification and segmentation given a couple of facemask datasets. Specifically, the objectives were:
+- Binary classification of images (with or without mask) using handcrafted features and traditional models, as well as using CNNs.
+- Facemask segmentation and evaluation using traditional methods like GMMs, K-Means, Watershed etc. as well as using U-Net.
+
 ---
 
 ## Dataset
+
+- The first dataset, used for classification tasks, contains around 2000 images each of faces with and without masks. All images have variations in size, illumination, gender, pose, etc.
+- The second dataset, used for segmentation tasks, contains around 9000 images, again in various sizes and lighting conditions, of people wearing a face mask. For each image, the ground truth segmented output with the facemmask region coloured white, and the remaining region black is also provided.
 
 ---
 
 ## Methodology
 
-### Classification
+### Classification Tasks
 
-The following is done:
+For the handcrafted features part, we did the following:
 
 **Preprocessing**:  
 
-- Convert images to grayscale.
-- Resize to 64×64 pixels.  
+- Converted images to grayscale.
+- Resized to 64×64 pixels.  
 
 **Feature Extraction**:
 
-- Apply Histogram of Oriented Gradients (HOG).  
+- Apply Histogram of Oriented Gradients (HOG).
 
 **Models Used**:
 
-- *SVM* (RBF Kernel, C=1.0)
-- *Neural Network* (MLP: 100 hidden units, ReLU, Adam optimizer, 500 epochs)
+- *SVM* with an RBF kernel
+- *Neural Network* (MLP) with a 100 hidden layers and ReLU activations, optimized using Adam
 
-For the CNN, we did the following:
+For the CNN part, we did the following:
 
 **CNN Architecture**:
 
 - Conv2D layers with Tanh activation.
 - Pooling & Dropout for regularization.
 - Fully connected layers & Sigmoid activation for classification.
-
-**Hyperparameters**:
-
-- Batch Size: 16
-- Optimizer: Adam
-- Activation: Tanh (for convolution layers)
-- Learning Rate: 0.001
 
 ### Segmentation
 
@@ -65,11 +65,11 @@ We tried the following traditional methods:
 - **thresholding**: Here we use otsu's method of thresholding.
 - **watershed**: Use the watershed algorithm and morphological operations to segment the image. More than just mask and non-mask regions may form.
 - **canny**: Use the canny edge detector to detect edges. Post this we consider two methods. The first one involves detecting horizontal and vertical coordinates where edges are prominent. The regions between the prominent edges is then filled to obtain the segmented output. The next one involves running a bfs and considering large edges only. Then using these edges, the minimum and maximum x and y coordinates are chosen to approximate the location of the mask. If edges are prominent in other parts of the image such other than at the mask face boundary of within the mask, we may go wrong.
-
-All outputs can be visualized using the code by setting the paramater show to be equal to True in the segmentation function.
-There is a count variable in each code that can be updated to look through more elements of the dataset and see scores.
-
 ---
+
+For the U-Net part, we did the following:
+
+
 
 ## Experiments
 
@@ -98,7 +98,7 @@ There is a count variable in each code that can be updated to look through more 
 
 - SVM achieved an accuracy of 94.0%.
 - Neural Network achieved an accuracy of 91.0%
-- The CNN model gave the highest accuracy of 97% compared to the models present in the part A.
+- The CNN model gave the highest accuracy of 97%.
 - SVM and MLP may work well with smaller datasets. They donot capture the spatial feaures as CNN does which helps learning edge, texture, and shape hierarchies through the convolution layers.
 - SVM and MLP require manual feature extraction which may not capture complex features efficiently.
 
