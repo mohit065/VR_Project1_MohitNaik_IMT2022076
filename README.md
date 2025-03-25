@@ -15,7 +15,7 @@
 
 ## Introduction
 
-The aim of this project was to perform facemask detection, classification and segmentation given a couple of facemask datasets. Specifically, the objectives were:
+The aim of this project was to perform facemask detection, classification and segmentation on a couple of facemask datasets. Specifically, the objectives were:
 - Binary classification of images (with or without mask) using handcrafted features and traditional models, as well as using CNNs.
 - Facemask segmentation and evaluation using traditional methods like GMMs, K-Means, Watershed etc. as well as using U-Net.
 
@@ -74,13 +74,14 @@ All 3 models were thoroughly evaluated with a variety of hyperparameters like ac
 
 ### Segmentation
 
-- K-Means, GMM and Otsu thresholding were straightforward to code and required no specific experiments.
-- Using the watershed algorithm involved tweaking the morphological operation (CLOSE OR OPEN), the threshold limits and the size of the blurring kernel. However no significant improvement was observed. If it performed better on one image, it didn't perform as well on another.
+- K-Means, GMM, and Otsu thresholding were straightforward to code and required no specific experiments.
+- Using the watershed algorithm involved tweaking the morphological operation (CLOSE OR OPEN), the threshold limits, and the size of the blurring kernel. However, no significant improvement was observed. If it performed better on one image, it didn't perform as well on another.
 - Watershed cannot be scored using something like IoU as it is possible that more than two regions are obtained. Assigning these as mask and not mask needs manual intervention.
-- Canny is an edge detector and not for segmentation. So, coming with techniques to use this method to aid in segmentation was not a trivial task. Although the methods used here are not robust algorithms with formal proofs, they perform at a level comparable to the other methods.
+- Canny is an edge detector and not for segmentation. So, coming up with techniques to use this method to aid in segmentation was not a trivial task. Although the methods used here are not robust algorithms with formal proofs, they perform at a level comparable to the other methods.
 
 - With the U-Net model, the experiments performed were tweaking hyperparameters like filter sizes and number of filters, different activations and loss functions. We also tried modifying the architecture by adding some batch norm and dropout layers, but they did not improve the model significantly. Also, we tried using SeparableConv2D instead of normal convolutions which applies depthwise and pointwise filtering, requiring fewer parameters without significant losses in accuracy, and Conv2DTranspose while upsampling, which allows reconstruction of high-resolution images.
 - An interesting thing to note was that the model performed equally well on smaller image sizes (64×64) as it did on larger ones (96×96 and 128×128). This is because the object of interest (the facemask) is clearly distinguishable even in the smaller images, and downsampling in U-Net reduces resolution anyway. The mdoel performance also did not improve a lot when we augmented data using albumentations, suggesting that the original dataset is diverse enough.
+
 ---
 
 ## Results
