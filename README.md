@@ -53,6 +53,7 @@ We tried the following traditional methods:
 - Thresholding: Used Otsu’s method to determine an optimal threshold value for segmenting the facemask region from the background.
 - Watershed: Utilized the Watershed algorithm combined with morphological operations to segment the image. This method may produce more than just mask and non-mask regions.
 - Canny: Apply the Canny edge detector to identify edges, followed by two different approaches for segmentation:
+
    - Detect prominent horizontal and vertical edges, then fill regions between them to obtain the segmented mask.
    - Perform a breadth-first search (BFS) to identify large edges, then use the minimum and maximum x and y coordinates of these edges to approximate the mask’s location. If strong edges appear outside the mask region, segmentation accuracy may be affected.
 
@@ -96,6 +97,7 @@ All 3 models were thoroughly evaluated with a variety of hyperparameters like ac
 
 - All the traditional segmentation methods used are susceptible to errors due to variations in lighting conditions, contrast, colors, gradients, and mask designs across images. Otsu thresholding struggles with images taken under different conditions, often failing when there is no clear intensity separation. K-means and GMM can produce highly inaccurate results, especially when the background color closely resembles the mask, leading to poor cluster differentiation. Canny edge-based segmentation is purely heuristic and performs poorly when non-mask regions contain strong edges, causing false detections. Segmentation performance is evaluated using Intersection over Union (IoU) or Dice scores, with the highest IoU score of 0.93 achieved by GMM. However, in challenging cases such as blurred images, IoU scores as low as 0.2 were observed.
 - Here are the average IOU scores across the first 100 images:
+
     - kmeans - 0.46
     - gmm - 0.51
     - canny1 - 0.52
