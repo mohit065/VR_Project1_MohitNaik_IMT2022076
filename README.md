@@ -103,6 +103,7 @@ All 3 models were thoroughly evaluated with a variety of hyperparameters like ac
     - otsu - 0.45
 
 Here are the obtained and expected outputs for gmm on an image:
+
 ![Sample GMM Output](segmentation/sample_gmm_output.png)
 ![Sample Ground Truth](segmentation/sample_gmm_ground_truth.png)
 
