@@ -34,54 +34,42 @@ The aim of this project was to perform facemask detection, classification and se
 
 For the handcrafted features part, we did the following:
 
-**Preprocessing**:  
+**Preprocessing**: Converted images to grayscale and resized to 64×64 pixels.
 
-- Converted images to grayscale.
-- Resized to 64×64 pixels.  
+**Feature Extraction**: Applied Histogram of Oriented Gradients (HOG) to capture edge and texture information by computing gradient orientations in localized regions of the image, emphasizing shape and structure for effective classification.
 
-**Feature Extraction**:
-
-- Apply Histogram of Oriented Gradients (HOG).
-
-**Models Used**:
-
-- *SVM* with an RBF kernel
-- *Neural Network* (MLP) with a 100 hidden layers and ReLU activations, optimized using Adam
+**Models Used**: We used an SVM classifier with an RBF kernel, along with a Multilayer Perceptron with 100 hidden layers, ReLU activation, optimized using Adam.
 
 For the CNN part, we did the following:
 
-**CNN Architecture**:
-
-- Conv2D layers with Tanh activation.
-- Pooling & Dropout for regularization.
-- Fully connected layers & Sigmoid activation for classification.
+**CNN Architecture**: 2 convolutional layers with 32 and 64 filters respectively along with max pooling, followed by a dense layer with 128 filters and then a dropout layer. Other hyperparameters like learning rates, activations, epochs and batch sizes were tuned and selected.
 
 ### Segmentation
 
 We tried the following traditional methods:
 
-- **kmeans**: Run a simple kmeans clustering based on each pixel's rgb values with k=2
-- **gmm**: Again a simple clustering algorithm that is run with n_components = 2
-- **thresholding**: Here we use otsu's method of thresholding.
-- **watershed**: Use the watershed algorithm and morphological operations to segment the image. More than just mask and non-mask regions may form.
-- **canny**: Use the canny edge detector to detect edges. Post this we consider two methods. The first one involves detecting horizontal and vertical coordinates where edges are prominent. The regions between the prominent edges is then filled to obtain the segmented output. The next one involves running a bfs and considering large edges only. Then using these edges, the minimum and maximum x and y coordinates are chosen to approximate the location of the mask. If edges are prominent in other parts of the image such other than at the mask face boundary of within the mask, we may go wrong.
+- K-Means: Performed K-Means clustering on pixel RGB values to segment the image into two clusters, aiming to distinguish mask and non-mask regions.
+- GMM: Applied Gaussian Mixture Models for clustering, treating the image as a mixture of two distributions to separate the facemask region.
+- Thresholding: Used Otsu’s method to determine an optimal threshold value for segmenting the facemask region from the background.
+- Watershed: Utilized the Watershed algorithm combined with morphological operations to segment the image. This method may produce more than just mask and non-mask regions.
+- Canny: Apply the Canny edge detector to identify edges, followed by two different approaches for segmentation:
+   - Detect prominent horizontal and vertical edges, then fill regions between them to obtain the segmented mask.
+   - Perform a breadth-first search (BFS) to identify large edges, then use the minimum and maximum x and y coordinates of these edges to approximate the mask’s location. If strong edges appear outside the mask region, segmentation accuracy may be affected.
+
 ---
 
 For the U-Net part, we did the following:
 
-
+**Preprocessing**: Converted images to grayscale and resized to 64×64 pixels.
+**Architecture**: The model follows a standard U-Net architecture with an encoder and a decoder part, and skip connections for preserving spatial features.
+ - The encoder block (downsampling) has 4 separable convolutional blocks with 32, 64, 128 and 512 filters respectively, with max pooling after each of the first 3 layers. The final convolution layer is the bottleneck layer, bridging the encoder and decoder while capturing high-level features
+ - The decoder block upsamples the feature maps back to the size of the input using 3 transposed convolution layers with 128, 64 and 32 filters respectively, and restores details using skip connections. A final convolution layer with sigmoid activation + thresholding is used to produce a binary mask that segments the facemask region.
 
 ## Experiments
 
 ### Classification
 
-- **Train-Test Split**: 80% train, 20% test (stratified).  
-- **Hyperparameter-tuning** : Hyperparameter tuning was done using grid-search cv for both the models.
-- **SVM**: Trained with RBF kernel for non-linear separability.  
-- **MLP**: One hidden layer (100 neurons, ReLU, Adam, 500 epochs).
-
-- Trained the CNN model using different optimizers, batch sizes, and activation functions.
-- Evaluated the accuracy for 5 epochs on the validation set.
+All 3 models were thoroughly evaluated with a variety of hyperparameters like number of layers, activations, kernels, number of epochs, optimizers, batch sizes, learning rates, number of filters etc. 
 
 ### Segmentation
 
